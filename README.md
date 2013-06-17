@@ -18,7 +18,29 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+First you have to include `Sidekiq::Delay` at your model.
+
+```ruby
+class Band
+  include Mongoid::Document
+  include Sidekiq::Delay
+
+  field :name
+
+  def play!
+    # it is a long task
+    sleep 3
+  end
+end
+```
+
+Now you can `delay` method calls to a Sidekiq queue.
+
+```ruby
+band = Band.create(name: 'Daft Punk')
+
+band.delay.play!
+```
 
 ## Contributing
 
