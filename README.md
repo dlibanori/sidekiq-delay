@@ -1,4 +1,7 @@
-# Sidekiq::Delay [![Build Status](https://secure.travis-ci.org/dlibanori/sidekiq-delay.png)](http://travis-ci.org/dlibanori/sidekiq-delay)
+# Sidekiq::Delay
+
+- [![Build Status](https://secure.travis-ci.org/dlibanori/sidekiq-delay.png)](http://travis-ci.org/dlibanori/sidekiq-delay)
+- [![Code Climate](https://codeclimate.com/github/dlibanori/sidekiq-delay.png)](https://codeclimate.com/github/dlibanori/sidekiq-delay)
 
 Wouldn't be nice if you could easily queue model method calls to Sidekiq? With **Sidekiq::Delay** you can!
 
