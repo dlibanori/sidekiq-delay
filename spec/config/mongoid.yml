@@ -1,0 +1,6 @@
+test:
+  sessions:
+   default:
+     database: sidekiq_delay_test
+     hosts:
+       - localhost:27017

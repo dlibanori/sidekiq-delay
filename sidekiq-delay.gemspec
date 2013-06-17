@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Sidekiq::Delay::VERSION
   spec.authors       = ["Daniel Libanori"]
   spec.email         = ["daniellibanori@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Wouldn't be nice if you could directly queue your model method calls to Sidekiq? With Sidekiq::Delaty you can!}
+  spec.summary       = %q{Queue model method calls at Sidekiq}
+  spec.homepage      = "https://github.com/dlibanori/sidekiq-delay"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -19,9 +19,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "sidekiq", "~> 2.12.4"
-  spec.add_dependency "activesupport ", "~> 3.2.13"
+  spec.add_dependency "activesupport", "~> 3.2.13"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "mongoid"
+  spec.add_development_dependency "rspec"
 end
