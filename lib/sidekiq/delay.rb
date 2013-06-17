@@ -24,7 +24,7 @@ module Sidekiq
     end
 
     module DefaultStrategy
-      def perfom(yml)
+      def perform(yml)
         ((klass, id), method_name, args) = YAML.load(yml)
         record.send(method_name, *args)
       end
