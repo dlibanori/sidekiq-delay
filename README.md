@@ -47,7 +47,9 @@ Now you can `delay` method calls to a Sidekiq queue.
 
 ## How it works
 
-It queues an job with model class, model id, method name and args. Later, at Sidekiq, it finds your model using class and id and calls method with args. Your class must respond to `find(id)`.
+It queues an job with model class, model id, method name and args. Later, at Sidekiq, it finds your model using class and id and calls method with args. Your class must respond to `find(id)` and return same model.
+
+**NOTE**: Your model must be stored at database before `delay` any call.
 
 ## Custom works
 
