@@ -36,7 +36,7 @@ First you have to include `Sidekiq::Delay` at your model.
     field :name
 
     def play!
-      # it is a long task
+      # a long task
       sleep 3
     end
   end
@@ -84,7 +84,7 @@ Your worker just need to include `Sidekiq::Delay::DefaultStrategy` or extend `Si
     end
 
     def play!
-      # it is a long task
+      # a long task
       sleep 3
     end
   end
