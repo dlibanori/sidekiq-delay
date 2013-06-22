@@ -1,5 +1,6 @@
 require "spec_helper"
 require 'sidekiq/testing'
+
 require 'app/models/band'
 require 'app/models/team'
 

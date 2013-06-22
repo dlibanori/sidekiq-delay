@@ -6,7 +6,7 @@ class Band
 
   def play
     print 'Long running task...'
-    spleep 3
+    sleep 3
     print ' done!'
   end
 end
