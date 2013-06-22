@@ -1,9 +1,9 @@
 require "spec_helper"
-require "sidekiq/delay/default_strategy"
+require "sidekiq/delay/strategy"
 
-describe Sidekiq::Delay::DefaultStrategy do
+describe Sidekiq::Delay::Strategy do
   Game = Class.new
-  GameWorker = Class.new { include Sidekiq::Delay::DefaultStrategy }
+  GameWorker = Class.new { include Sidekiq::Delay::Strategy }
 
   subject(:worker) { GameWorker.new }
 

@@ -1,6 +1,6 @@
 module Sidekiq
   module Delay
-    module DefaultStrategy
+    module Strategy
       def perform(yml)
         ((klass, id), method_name, args) = YAML.load(yml)
         record(klass, id).send(method_name, *args)

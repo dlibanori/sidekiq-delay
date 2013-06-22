@@ -1,10 +1,10 @@
 require "spec_helper"
-require "sidekiq/delay/default_worker"
+require "sidekiq/delay/worker"
 
-describe Sidekiq::Delay::DefaultWorker do
+describe Sidekiq::Delay::Worker do
   subject { described_class }
 
-  let(:strategy) { Sidekiq::Delay::DefaultStrategy }
+  let(:strategy) { Sidekiq::Delay::Strategy }
   let(:worker) { Sidekiq::Worker }
 
   its(:ancestors) { should include(strategy) }

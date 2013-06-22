@@ -2,7 +2,7 @@ require 'sidekiq/delay'
 
 class TeamWorker
   include Sidekiq::Worker
-  include Sidekiq::Delay::DefaultStrategy
+  include Sidekiq::Delay::Strategy
 
   def record(klass, id)
     klass.find(id)

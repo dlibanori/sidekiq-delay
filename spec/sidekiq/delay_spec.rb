@@ -9,14 +9,14 @@ describe Sidekiq::Delay do
   context "with default worker" do
     subject { Band }
     let(:band) { Band.new }
-    let(:worker) { Sidekiq::Delay::DefaultWorker }
+    let(:worker) { Sidekiq::Delay::Worker }
 
     its(:worker) { should eq(worker) }
 
     it "queues a job at default queue" do
       expect {
         band.delay.play
-      }.to change(Sidekiq::Delay::DefaultWorker.jobs, :size).by(1)
+      }.to change(Sidekiq::Delay::Worker.jobs, :size).by(1)
     end
   end
 

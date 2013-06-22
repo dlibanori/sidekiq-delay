@@ -59,12 +59,12 @@ It queues an job with model class, model id, method name and args. Later, at Sid
 
 What if you class doesn't respond to `find` or you want to use another `Sidekiq` plugin? You can easily write an **custom worker**. You have just to set your model to use it with `worker` method.
 
-Your worker just need to include `Sidekiq::Delay::DefaultStrategy` or extend `Sidekiq::Delay::DefaultWorker`.
+Your worker just need to include `Sidekiq::Delay::Strategy` or extend `Sidekiq::Delay::Worker`.
 
 ```ruby
   class TeamWorker
     include Sidekiq::Worker
-    include Sidekiq::Delay::DefaultStrategy
+    include Sidekiq::Delay::Strategy
 
     def record(klass, id)
       klass.custom_find(id)
