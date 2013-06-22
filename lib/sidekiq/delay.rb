@@ -1,5 +1,5 @@
 require "sidekiq"
-require 'active_support/concern'
+require "active_support/concern"
 require "sidekiq/delay/default_worker"
 
 module Sidekiq
