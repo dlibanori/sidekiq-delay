@@ -11,13 +11,22 @@ describe Sidekiq::Delay::DefaultWorker do
 
   before { Band.stub(find: band) }
 
-  it "find an instance at class" do
-    Band.should_receive(:find).with(1).and_return(band)
-    default_worker.perform(yml)
+  context "#perfom" do
+    it "calls record to find instance" do
+      default_worker.should_receive(:record).with(Band, 1).and_return(band)
+      default_worker.perform(yml)
+    end
+
+    it "calls play on instance" do
+      band.should_receive(:play).with("get lucky", 10, 20)
+      default_worker.perform(yml)
+    end
   end
 
-  it "calls play on instance" do
-    band.should_receive(:play).with("get lucky", 10, 20)
-    default_worker.perform(yml)
+  context "#record" do
+    it "finds an instance at class" do
+      Band.should_receive(:find).with(1).and_return(band)
+      default_worker.record(Band, 1)
+    end
   end
 end
