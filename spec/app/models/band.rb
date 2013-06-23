@@ -1,4 +1,5 @@
-require 'sidekiq/delay'
+require "support/mongoid"
+require "sidekiq/delay"
 
 class Band
   include Mongoid::Document
