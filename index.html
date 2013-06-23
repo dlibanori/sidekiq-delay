@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Sidekiq-delay by dlibanori</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Sidekiq-delay</h1>
+        <h2></h2>
+        <a href="https://github.com/dlibanori/sidekiq-delay" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="sidekiqdelay---" class="anchor" href="#sidekiqdelay---"><span class="octicon octicon-link"></span></a>Sidekiq::Delay <a href="http://travis-ci.org/dlibanori/sidekiq-delay"><img src="https://secure.travis-ci.org/dlibanori/sidekiq-delay.png" alt="Build Status"></a> <a href="https://codeclimate.com/github/dlibanori/sidekiq-delay"><img src="https://codeclimate.com/github/dlibanori/sidekiq-delay.png" alt="Code Climate"></a> <a href="https://coveralls.io/r/dlibanori/sidekiq-delay"><img src="https://coveralls.io/repos/dlibanori/sidekiq-delay/badge.png" alt="Coverage Status"></a>
+</h1>
+
+<p>Wouldn't be nice if you could easily queue model method calls to Sidekiq? With <strong>Sidekiq::Delay</strong> you can!</p>
+
+<p>You have just to include a module and call <code>delay</code> before any method call. Actually, your model class have to respond to some methods, but if you are using <code>ActiveRecord</code> or <code>Mongoid</code> they already do.</p>
+
+<p><strong>NOTE</strong>: It doesn't support <code>block</code> arguments.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'sidekiq-delay'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install sidekiq-delay
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>First you have to include <code>Sidekiq::Delay</code> at your model.</p>
+
+<div class="highlight"><pre>  <span class="k">class</span> <span class="nc">Band</span>
+    <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span>
+    <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Delay</span>
+
+    <span class="n">field</span> <span class="ss">:name</span>
+
+    <span class="k">def</span> <span class="nf">play!</span>
+      <span class="c1"># a long task</span>
+      <span class="nb">sleep</span> <span class="mi">3</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</pre></div>
+
+<p>Now you can <code>delay</code> method calls to a Sidekiq queue.</p>
+
+<div class="highlight"><pre>  <span class="n">band</span> <span class="o">=</span> <span class="no">Band</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">'Daft Punk'</span><span class="p">)</span>
+  <span class="n">band</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">play!</span>
+</pre></div>
+
+<h2>
+<a name="how-it-works" class="anchor" href="#how-it-works"><span class="octicon octicon-link"></span></a>How it works</h2>
+
+<p>It queues an job with model class, model id, method name and args. Later, at Sidekiq, it finds your model using class and id and calls method with args. Your class must respond to <code>find(id)</code> and return same model.</p>
+
+<p><strong>NOTE</strong>: Your model must be stored at database before <code>delay</code> any call.</p>
+
+<h2>
+<a name="custom-works" class="anchor" href="#custom-works"><span class="octicon octicon-link"></span></a>Custom works</h2>
+
+<p>What if you class doesn't respond to <code>find</code> or you want to use another <code>Sidekiq</code> plugin? You can easily write an <strong>custom worker</strong>. You have just to set your model to use it with <code>worker</code> method.</p>
+
+<p>Your worker just need to include <code>Sidekiq::Delay::Strategy</code> or extend <code>Sidekiq::Delay::Worker</code>.</p>
+
+<div class="highlight"><pre>  <span class="k">class</span> <span class="nc">TeamWorker</span>
+    <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Worker</span>
+    <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Delay</span><span class="o">::</span><span class="no">Strategy</span>
+
+    <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+      <span class="n">klass</span><span class="o">.</span><span class="n">custom_find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">Team</span>
+    <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span>
+    <span class="kp">include</span> <span class="ss">Sidekiq</span><span class="p">:</span><span class="ss">:Delay</span>
+
+    <span class="n">worker</span> <span class="no">TeamWorker</span>
+
+    <span class="n">field</span> <span class="ss">:name</span>
+
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">custom_find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+      <span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">play!</span>
+      <span class="c1"># a long task</span>
+      <span class="nb">sleep</span> <span class="mi">3</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</pre></div>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/dlibanori/sidekiq-delay/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/dlibanori/sidekiq-delay/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/dlibanori/sidekiq-delay"></a> is maintained by <a href="https://github.com/dlibanori">dlibanori</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
