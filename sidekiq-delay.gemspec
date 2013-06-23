@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["daniellibanori@gmail.com"]
   spec.description   = %q{Wouldn't be nice if you could directly queue your model method calls to Sidekiq? With Sidekiq::Delaty you can!}
   spec.summary       = %q{Queue model method calls at Sidekiq}
-  spec.homepage      = "https://github.com/dlibanori/sidekiq-delay"
+  spec.homepage      = "http://dlibanori.github.io/sidekiq-delay/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
