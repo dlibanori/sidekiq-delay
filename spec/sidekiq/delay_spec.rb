@@ -2,6 +2,8 @@ require "spec_helper"
 require 'sidekiq/testing'
 
 require 'sidekiq/delay'
+
+require 'support/mongoid'
 require 'app/models/band'
 require 'app/models/team'
 
