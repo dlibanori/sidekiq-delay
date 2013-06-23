@@ -1,9 +1,6 @@
 require "spec_helper"
 require 'sidekiq/testing'
-
 require 'sidekiq/delay'
-
-require 'support/mongoid'
 require 'app/models/band'
 require 'app/models/team'
 
@@ -11,9 +8,8 @@ describe Sidekiq::Delay do
   context "with default worker" do
     subject { Band }
     let(:band) { Band.new }
-    let(:worker) { Sidekiq::Delay::Worker }
 
-    its(:worker) { should eq(worker) }
+    its(:worker) { should eq(Sidekiq::Delay::Worker) }
 
     it "queues a job at default queue" do
       expect {
@@ -25,9 +21,8 @@ describe Sidekiq::Delay do
   context "with custom worker" do
     subject { Team }
     let(:team) { Team.new }
-    let(:worker) { TeamWorker }
 
-    its(:worker) { should eq(worker) }
+    its(:worker) { should eq(TeamWorker) }
 
     it "queues a job at custom queue" do
       expect {

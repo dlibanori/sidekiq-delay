@@ -1,12 +1,14 @@
-require "support/mongoid"
 require "sidekiq/delay"
 
 class Band
-  include Mongoid::Document
   include Sidekiq::Delay
 
+  def id
+    @id ||= rand 10
+  end
+
   def play
-    print 'Long running task...'
+    print 'Long task...'
     sleep 3
     print ' done!'
   end

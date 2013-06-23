@@ -1,4 +1,3 @@
-require "support/mongoid"
 require "sidekiq/delay"
 
 class TeamWorker
@@ -11,13 +10,16 @@ class TeamWorker
 end
 
 class Team
-  include Mongoid::Document
   include Sidekiq::Delay
 
   worker TeamWorker
 
+  def id
+    @id ||= rand 10
+  end
+
   def play
-    print 'Long running task...'
+    print 'Long task...'
     spleep 3
     print ' done!'
   end
