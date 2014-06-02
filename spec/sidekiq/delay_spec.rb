@@ -6,10 +6,10 @@ require 'app/models/team'
 
 describe Sidekiq::Delay do
   context "with default worker" do
-    subject { Band }
+    subject { Band.worker }
     let(:band) { Band.new }
 
-    its(:worker) { should eq(Sidekiq::Delay::Worker) }
+    it { should eq(Sidekiq::Delay::Worker) }
 
     it "queues a job at default queue" do
       expect {
@@ -19,10 +19,10 @@ describe Sidekiq::Delay do
   end
 
   context "with custom worker" do
-    subject { Team }
+    subject { Team.worker }
     let(:team) { Team.new }
 
-    its(:worker) { should eq(TeamWorker) }
+    it { should eq(TeamWorker) }
 
     it "queues a job at custom queue" do
       expect {
